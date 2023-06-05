@@ -126,6 +126,11 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# application authentication settings
 AUTH_USER_MODEL = "authentication.User"
-
 LOGIN_REDIRECT_URL = 'home'
+
+# application reviews settings
+# media storage
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.joinpath('media/')

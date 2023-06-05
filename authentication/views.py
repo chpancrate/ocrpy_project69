@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from . import forms
 
 
-def signup_page(request):
+def signup(request):
     form = forms.SignupForm()
     if request.method == 'POST':
         form = forms.SignupForm(request.POST)

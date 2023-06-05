@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <h2>Créer un critique</h2>
+        <form method="post" enctype="multipart/form-data">
+            <h3>Livres / Article</h3>
+            {{ ticket_form.as_p }}
+            <h3>Critique</h3>
+            {{ review_form.as_p }}
+            {% csrf_token %}
+        <button type="submit" >Publier</button>
+    </div>
+{% endblock content %}

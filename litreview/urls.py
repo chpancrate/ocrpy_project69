@@ -16,20 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth.views import (
     LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView)
 
 import authentication.views
+import reviews.views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
         "",
         LoginView.as_view(
-            template_name="authentication/login.html", redirect_authenticated_user=True
+            template_name="authentication/login.html", 
+            redirect_authenticated_user=True
         ),
         name="login",
-    ),
+        ),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('change-password/', PasswordChangeView.as_view(
         template_name='authentication/password_change_form.html'),
@@ -39,5 +43,24 @@ urlpatterns = [
         template_name='authentication/password_change_done.html'),
          name='password_change_done'
          ),
-    path('signup/', authentication.views.signup_page, name='signup'),
+    path('signup/', authentication.views.signup, name='signup'),
+    path('home/', reviews.views.home, name='home'),
+    path('ticket/create/', reviews.views.ticket_create, name='ticket-create'),
+    path('ticket/<int:ticket_id>/edit/',
+         reviews.views.ticket_edit,
+         name='ticket-edit',
+         ),
+    path('reviews/create_without_ticket/',
+         reviews.views.review_without_ticket_create,
+         name='review_without_ticket-create'),
+    path('reviews/create_with_ticket/<int:ticket_id>/',
+         reviews.views.review_with_ticket_create,
+         name='review_with_ticket-create'),
+    path('reviews/<int:review_id>/edit/',
+         reviews.views.review_edit,
+         name='review_edit'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

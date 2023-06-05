@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <h2>Modifier votre critique</h2>
+        <p>Vous êtes en train de poster en réponse à</p>
+        <p>{{ ticket.user }} a demandé une critique de</p>
+        <p>{{ ticket.title }}</p>
+        <p>{{ ticket.description }}</p>
+        <img src="{{ ticket.image.url }}">
+        <form method="post">
+            <h3>Critique</h3>
+            {{ review_form.as_p }}
+            {% csrf_token %}
+        <button type="submit" >Publier</button>
+    </div>
+{% endblock content %}

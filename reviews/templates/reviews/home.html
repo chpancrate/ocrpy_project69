@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <h2>Bienvenue sur LITReview</h2>
+        <a href="{% url 'ticket-create' %}">Créer une demande</a>
+        <p><a href="{% url 'review_without_ticket-create' %}">Créer une critique sans ticket</a></p>
+    </div>
+    <div>
+        <p>Tickets</p>
+        {% for ticket in tickets %}
+            <div>
+                <p>{{ ticket.id }}</p>
+                <p>{{ ticket.title }}</p>
+                <p>{{ ticket.description }}</p>
+                <p>{{ ticket.user }}</p>
+                {% if ticket.image %}
+                    <img src="{{ ticket.image.url }}">
+                {% endif %}
+                <p>{{ ticket.time_created }}</p>
+                <p><a href="{% url 'ticket-edit' ticket.id %}">Modifier</a></p>
+                <p><a href="{% url 'review_with_ticket-create' ticket.id %}">Créer un critique</a></p>
+                <p>##########</p>
+            </div>
+        {% endfor%}
+        <p>Critiques</p>
+        {% for review in reviews %}
+            <div>
+                <p>{{ review.id }}</p>
+                <p>{{ review.headline }}</p>
+                <p>{{ review.body }}</p>
+                <p>{{ review.rating }}</p>
+                <p>Ticket  : {{ review.ticket.id }}</p>
+                <p>{{ review.user }}</p>
+                <p>{{ review.time_created }}</p>
+                <p><a href="{% url 'review_edit' review.id %}">Modifier</a></p>
+                <p>##########</p>
+            </div>
+        {% endfor%}
+    </div>
+
+{% endblock content %}
