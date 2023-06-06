@@ -5,9 +5,19 @@
     </head>
 
     <body>
-        <h1>LITReview</h1>
-        {{ user.username }}
-        {% block content %}{% endblock content %}
+        <header>
+            <h1>LITReview</h1>
+            {{ user.username }}
+            <nav>
+                <a href="{% url 'home' %}">Flux</a>
+                <a href="{% url 'posts' %}">Posts</a>
+                <a href="{% url 'follow_user' %}">Abonnements</a>
+                <a href="{% url 'logout' %}">Se déconnecter</a>
+            </nav>
+        </header>
+        <div>
+            {% block content %}{% endblock content %}
+        </div>
     </body>
 
 </html>

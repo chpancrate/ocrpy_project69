@@ -1,4 +1,7 @@
+from itertools import chain
+
 from django.contrib.auth.decorators import login_required
+from django.db.models import CharField, Value, Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from . import forms
@@ -7,12 +10,40 @@ from . import models
 
 @login_required
 def home(request):
-    tickets = models.Ticket.objects.all()
-    reviews = models.Review.objects.all()
+    tickets = models.Ticket.objects.filter(
+        Q(user__in=request.user.following.values("followed_user")) |
+        Q(user=request.user)
+    )
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    reviews = models.Review.objects.filter(
+        Q(user__in=request.user.following.values("followed_user")) |
+        Q(user=request.user) |
+        Q(ticket__in=models.Ticket.objects.filter(user=request.user))
+    )
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-    context = {'tickets': tickets,
-               'reviews': reviews}
+    feed = sorted(
+        chain(tickets, reviews),
+        key=lambda instance: instance.time_created,
+        reverse=True
+    )
+    context = {'feed': feed}
     return render(request, 'reviews/home.html', context)
+
+
+def posts(request):
+    tickets = models.Ticket.objects.filter(user=request.user)
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    reviews = models.Review.objects.filter(user=request.user)
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+
+    feed = sorted(
+        chain(tickets, reviews),
+        key=lambda instance: instance.time_created,
+        reverse=True
+    )
+    context = {'feed': feed}
+    return render(request, 'reviews/posts.html', context)
 
 
 def ticket_create(request):
@@ -46,6 +77,19 @@ def ticket_edit(request, ticket_id):
 
     context = {'form': form}
     return render(request, 'reviews/ticket_edit.html', context)
+
+
+def ticket_delete(request, ticket_id):
+    ticket = models.Ticket.objects.get(id=ticket_id)
+
+    if request.method == 'POST':
+        ticket.delete()
+        return redirect('home')
+
+    context = {'ticket': ticket}
+    return render(request,
+                  'reviews/ticket_delete.html',
+                  context)
 
 
 def review_without_ticket_create(request):
@@ -121,6 +165,18 @@ def review_edit(request, review_id):
     return render(request, 'reviews/review_edit.html',
                   context)
 
+
+def review_delete(request, review_id):
+    review = models.Review.objects.get(id=review_id)
+
+    if request.method == 'POST':
+        review.delete()
+        return redirect('home')
+
+    context = {'review': review}
+    return render(request,
+                  'reviews/review_delete.html',
+                  context)
 
 def follow_user(request):
     """ add a followed user"""
