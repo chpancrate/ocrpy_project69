@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <h2>Suivre d'autres utilisateurs</h2>
+        <form method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+        <button type="submit" >Envoyer</button>
+    </div>
+    <div>
+        <h2>Abonnements</h2>
+        <table>
+            {% for follow in following %}
+            <tr>
+                <td>{{ follow.followed_user.username }} </td>
+                <td><a href="{% url 'unfollow_user' follow.id %}">Désabonner</a></td>
+            </tr>
+            {% endfor%}
+        </table>
+    </div>
+    <div>
+        <h2>Abonnés</h2>
+        <table>
+            {% for follow in followed_by %}
+            <tr>
+                <td>{{ follow.user.username }} </td>
+            </tr>
+            {% endfor%}
+        </table>
+    </div>
+
+
+{% endblock content %}

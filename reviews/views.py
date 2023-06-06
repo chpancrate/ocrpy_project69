@@ -1,10 +1,11 @@
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from . import forms
 from . import models
 
 
+@login_required
 def home(request):
     tickets = models.Ticket.objects.all()
     reviews = models.Review.objects.all()
@@ -118,4 +119,41 @@ def review_edit(request, review_id):
                'review_form': review_form
                }
     return render(request, 'reviews/review_edit.html',
+                  context)
+
+
+def follow_user(request):
+    """ add a followed user"""
+    followed_by = request.user.followed_by.all()
+    following = request.user.following.all()
+    if request.method == 'POST':
+        form = forms.FollowUserForm(request.POST)
+        if form.is_valid():
+            # save review in DB
+            user_follows = form.save(commit=False)
+            user_follows.user = request.user
+            user_follows = form.save()
+            # go back to home page
+            return redirect('follow_user')
+    else:
+        form = forms.FollowUserForm()
+
+    context = {'form': form,
+               'following': following,
+               'followed_by': followed_by
+               }
+    return render(request, 'reviews/follow_user.html',
+                  context)
+
+
+def unfollow_user(request, follow_id):
+    relationship = models.UserFollows.objects.get(id=follow_id)
+
+    if request.method == 'POST':
+        relationship.delete()
+        return redirect('follow_user')
+
+    context = {'relationship': relationship}
+    return render(request,
+                  'reviews/follow_delete.html',
                   context)

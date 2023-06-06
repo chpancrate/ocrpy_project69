@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <h2>Voulez vous vous desabonner de?</h2>
+        {{ relationship.followed_user }}
+        <form method="post">
+            {% csrf_token %}
+        <button type="submit" >se désabonner</button>
+    </div>
+{% endblock content %}
