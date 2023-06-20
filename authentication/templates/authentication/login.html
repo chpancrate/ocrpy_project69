@@ -10,12 +10,9 @@
 <body>
     <header>
         <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-2">
-                    <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="logo">
-                </div>
-                <div class="col-10">
-                    <img src="{% static 'images/banner_login.jpg' %}"  class="img-fluid" alt="bannière représentant un livre ouvert">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <img src="{% static 'images/banner_login.jpg' %}"  class="img-fluid" alt="bannière représentant un livre ouvert et le logo">
                 </div>
             </div>
         </div>
@@ -23,12 +20,12 @@
     <main>
         <div class="container mt-5">
             <div class="row align-items-center justify-content-evenly">
-                <div class="col-3 align-content-center">
+                <div class="col-12 col-md-4 align-content-center">
                     <p class="fw-bold">Vous n'avez pas de compte?</p>
                     <p>Inscrivez-vous maintenant</p>
                     <a href="{% url 'signup' %}"><button type="button" class="btn btn-primary">S'inscrire</button></a>
                 </div>
-                <div class="col-4">
+                <div class="col-12 col-md-4 mt-5">
                     <p>{{ message }}</p>
                     <h2>Connectez-vous</h2>
                     <form method="post">

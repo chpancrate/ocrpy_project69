@@ -76,18 +76,17 @@
                             </div>
                             <div class="card-body">
                                 <p class="card-text">{{ post.headline }}</p>
-                                    <span class="ratings">
-                                        <script>
-                                            var fullStarNumber = {{ post.rating }};
-                                            for (var i = 1; i <= fullStarNumber; i++) {
-                                                document.write('<i class="bi bi-star-fill"></i>');
-                                            }
-                                            var emptyStarNumber = 5 - fullStarNumber
-                                            for (var i = 1; i <= emptyStarNumber; i++) {
-                                                document.write('<i class="bi bi-star"></i>');
-                                            }
-                                        </script>
-                                    </span>
+                                <p class="ratings">
+                                    <script>
+                                        var fullStarNumber = {{ post.rating }};
+                                        for (var i = 1; i <= fullStarNumber; i++) {
+                                            document.write('<i class="bi bi-star-fill"></i>');
+                                        }
+                                        var emptyStarNumber = 5 - fullStarNumber
+                                        for (var i = 1; i <= emptyStarNumber; i++) {
+                                            document.write('<i class="bi bi-star"></i>');
+                                        }
+                                    </script>
                                 </p>
                                 <p class="card-text">{{ post.body }}</p>
                                 <div class="card">

@@ -1,79 +1,107 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 mt-3 mb-5">
-                <h2 class="text-center">Bienvenue sur LITReview</h2>
-            </div>
-        </div>
-        <h3 class="text-center mb-4">Actualités de votre flux</h3>
-        <div class="row">
-            {% for post in user_feed %}
-                <div class="col-4">
-                    <div class="card">
-                        {% if post.content_type == 'TICKET' %}
-                            <div class="card-header text-center">
-                                Ticket - {{ post.user }}
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    {% if post.image %}
-                                        <img src="{{ post.image.url }}">
-                                    {% endif %}
-                                </div>
-                                <h5 class="card-title">{{ post.title }}</h5>
-                                <p class="card-text">{{ post.description }}</p>
-                                <div class="d-flex justify-content-evenly">
-                                    {% if post.review_set.all|length == 0 %}
-                                        <a href="{% url 'review_with_ticket_create' post.id %}" class="btn btn-primary">Créer une critique</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% elif post.content_type == 'REVIEW' %}
-                            <div class="card-header text-center">
-                                Critique - {{ post.user }}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ post.ticket.title }}</h5>
-                                <p class="card-text">{{ post.headline }}</p>
-                                <p class="card-text">{{ post.body }}</p>
-                                <p class="card-text">{{ post.rating }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        <h3 class="text-center mt-4 mb-4">Actualités générales</h3>
-        <div class="row">
-            {% for post in general_feed %}
-                <div class="col-4">
-                    <div class="card">
-                        {% if post.content_type == 'TICKET' %}
-                            <div class="card-header text-center">
-                                Ticket - {{ post.user }}
-                            </div>
-                            {% if post.image %}
-                                <img src="{{ post.image.url }}">
-                            {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title">{{ post.title }}</h5>
-                                <p class="card-text">{{ post.description }}</p>
-                            </div>
-                        {% elif post.content_type == 'REVIEW' %}
-                            <div class="card-header text-center">
-                                Critique - {{ post.user }}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ post.ticket.title }}</h5>
-                                <p class="card-text">{{ post.headline }}</p>
-                                <p class="card-text">{{ post.body }}</p>
-                                <p class="card-text">{{ post.rating }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 mt-3 mb-3">
+            <h2 class="text-center text-primary">Bienvenue sur LITReview</h2>
         </div>
     </div>
+    <h3 class="text-center  text-primary my-4">Actualités générales</h3>
+    <div class="row">
+        {% for post in general_feed %}
+            <div class="col-12 col-lg-6 col-xl-4">
+                <div class="card style="heigth: 400px">
+                    {% if post.content_type == 'TICKET' %}
+                        <div class="card-header text-center">
+                            Ticket - {{ post.user }}
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}">
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title mt-4">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.description }}</p>
+                        </div>
+                    {% elif post.content_type == 'REVIEW' %}
+                        <div class="card-header text-center">
+                            Critique - {{ post.user }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.ticket.title }}</h5>
+                            <p class="card-text">{{ post.headline }}</p>
+                            <p class="ratings">
+                                <script>
+                                    var fullStarNumber = {{ post.rating }};
+                                    for (var i = 1; i <= fullStarNumber; i++) {
+                                        document.write('<i class="bi bi-star-fill"></i>');
+                                    }
+                                    var emptyStarNumber = 5 - fullStarNumber
+                                    for (var i = 1; i <= emptyStarNumber; i++) {
+                                        document.write('<i class="bi bi-star"></i>');
+                                    }
+                                </script>
+                            </p>
+                            <p class="card-text">{{ post.body }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <h3 class="text-center text-primary my-4">Actualités de votre flux</h3>
+    <div class="row">
+        {% for post in user_feed %}
+            <div class="col-12 col-lg-6 col-xl-4">
+                <div class="card">
+                    {% if post.content_type == 'TICKET' %}
+                        <div class="card-header text-center">
+                            Ticket - {{ post.user }}
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                {% if post.image %}
+                                    <img src="{{ post.image.url }}">
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title mt-4">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.description }}</p>
+                            <!--
+                            <div class="d-flex justify-content-evenly">
+                                {% if post.review_set.all|length == 0 %}
+                                    <a href="{% url 'review_with_ticket_create' post.id %}" class="btn btn-primary">Créer une critique</a>
+                                {% endif %}
+                            </div>
+                            -->
+                        </div>
+                    {% elif post.content_type == 'REVIEW' %}
+                        <div class="card-header text-center">
+                            Critique - {{ post.user }}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.ticket.title }}</h5>
+                            <p class="card-text">{{ post.headline }}</p>
+                            <p class="ratings">
+                                <script>
+                                    var fullStarNumber = {{ post.rating }};
+                                    for (var i = 1; i <= fullStarNumber; i++) {
+                                        document.write('<i class="bi bi-star-fill"></i>');
+                                    }
+                                    var emptyStarNumber = 5 - fullStarNumber
+                                    for (var i = 1; i <= emptyStarNumber; i++) {
+                                        document.write('<i class="bi bi-star"></i>');
+                                    }
+                                </script>
+                            </p>
+                            <p class="card-text">{{ post.body }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock content %}
