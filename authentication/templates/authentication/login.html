@@ -1,18 +1,54 @@
-{% extends 'base.html' %}
-{% block content %}
-    <div>
-        <p>Vous n'avez pas de compte ?</p>
-        <p>Inscrivez-vous maintenant</p>
-        <a href="{% url 'signup' %}"><button type="button">S'inscrire</button></a>
-    </div>
+{% load static %}
 
-    <div>
-        <p>{{ message }}</p>
-        <h2>Connectez-vous</h2>
-        <form method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-            <button type="submit">Se connecter</button>
-        </form>
-    </div>
-{% endblock content %}
+<html>
+
+<head>
+    <title>LITReview</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-2">
+                    <img src="{% static 'images/logo.png' %}" class="img-fluid" alt="logo">
+                </div>
+                <div class="col-10">
+                    <img src="{% static 'images/banner_login.jpg' %}"  class="img-fluid" alt="bannière représentant un livre ouvert">
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="container mt-5">
+            <div class="row align-items-center justify-content-evenly">
+                <div class="col-3 align-content-center">
+                    <p class="fw-bold">Vous n'avez pas de compte?</p>
+                    <p>Inscrivez-vous maintenant</p>
+                    <a href="{% url 'signup' %}"><button type="button" class="btn btn-primary">S'inscrire</button></a>
+                </div>
+                <div class="col-4">
+                    <p>{{ message }}</p>
+                    <h2>Connectez-vous</h2>
+                    <form method="post">
+                        <div class="form-group">
+                            <p><label for="{{ form.username.id_for_label}}" class="form-label">Nom d'utilisateur :</label></p>
+                            {{ form.username}} 
+                        </div>
+                        <div class="form-group mt-3">
+                            <p><label for="{{ form.password.id_for_label}}" class="form-label">Mot de passe :</label></p>
+                            <p class="col-10">
+                                <div class="w-100">
+                                    {{ form.password}}
+                                </div>        
+                            </p>
+                        </div>
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>

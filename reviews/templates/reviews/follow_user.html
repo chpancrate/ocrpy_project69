@@ -1,33 +1,78 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div>
-        <h2>Suivre d'autres utilisateurs</h2>
-        <form method="post">
-            {{ form.as_p }}
-            {% csrf_token %}
-        <button type="submit" >Envoyer</button>
-    </div>
-    <div>
-        <h2>Abonnements</h2>
-        <table>
-            {% for follow in following %}
-            <tr>
-                <td>{{ follow.followed_user.username }} </td>
-                <td><a href="{% url 'unfollow_user' follow.id %}">Désabonner</a></td>
-            </tr>
-            {% endfor%}
-        </table>
-    </div>
-    <div>
-        <h2>Abonnés</h2>
-        <table>
-            {% for follow in followed_by %}
-            <tr>
-                <td>{{ follow.user.username }} </td>
-            </tr>
-            {% endfor%}
-        </table>
-    </div>
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-10">
+            <h2 class="text-center text-primary my-4">Suivre d'autres utilisateurs</h2>
+            <div class="container">
+                <form method="post">
+                    <div class="row">
+                        <div class="col-3 col-lg-2">
+                            Utilisateur
+                        </div>
+                        <div class="col-6 col-lg-8">
+                            {{ form.followed_user }}
+                        </div>
+                        <div class="col-3 col-lg-2">
+                            <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+                        </div>
+                    </div>
+                    {% csrf_token %}
+                </form>
+            </div>
 
+            <h2 class="text-center text-primary my-4">Abonnements</h2>
+            <div class="container">
+                <div class="row d-flex justify-content-between">
+                    {% for follow in following %}
+                    <div class="col-6 col-md-8 col-lg-9 my-1">
+                        <div class="bg-light h-100 w-100 d-flex align-items-center px-1">
+                            {{ follow.followed_user.username }}
+                        </div>
+                        <!--
+                        <p class="bg-light w-100 h-100">{{ follow.followed_user.username }} </p>
+                        -->
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3 my-1 text-end">
+                        <!--
+                        <p class="w-100"><a href="{% url 'unfollow_user' follow.id %}" class="btn btn-primary w-100">Désabonner</a></p>
+                        -->
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#unfollowModal">
+                            Se désabonner
+                            </button>
+                    </div>
+                    {% endfor%}
+                </div>
+            </div>
+
+            <h2 class="text-center text-primary my-4">Abonnés</h2>
+            <div class="container">
+                <div class="row">
+                    {% for follow in followed_by %}
+                    <div class="col-12 my-1">
+                            <div class="bg-light h-100 w-100 d-flex align-items-center px-1">
+                                {{ follow.user.username }}
+                            </div>
+                    </div>
+                    {% endfor%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- unfollowModal -->
+<div class="modal fade" id="unfollowModal" tabindex="-1" aria-labelledby="unfollow modal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+            Voulez vous vous désabonner ?
+        </div>
+        <div class="modal-footer d-flex justify-content-evenly">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Se désabonner</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock content %}

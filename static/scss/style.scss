@@ -1,0 +1,17 @@
+@import "_variables_overrides.scss";
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+/* non bootstrap styling */
+
+.ratings {
+    margin-right: 10px;
+    color: $primary !important;
+}
+
+.card {
+    border: none;
+}
+
+.card.inticket {
+    border: 1px;
+}

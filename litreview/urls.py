@@ -45,6 +45,7 @@ urlpatterns = [
          ),
     path('signup/', authentication.views.signup, name='signup'),
     path('home/', reviews.views.home, name='home'),
+    path('feed/', reviews.views.feed, name='feed'),
     path('posts/', reviews.views.posts, name='posts'),
     path('ticket/create/', reviews.views.ticket_create, name='ticket_create'),
     path('ticket/<int:ticket_id>/edit/',

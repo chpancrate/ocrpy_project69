@@ -1,0 +1,14 @@
+{
+  "name": "ocrpy_project9",
+  "version": "1.0.0",
+  "description": "Open Classrooms project 9 : website with django",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.3.0"
+  }
+}

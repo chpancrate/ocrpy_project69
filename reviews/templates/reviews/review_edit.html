@@ -1,16 +1,106 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div>
-        <h2>Modifier votre critique</h2>
-        <p>Vous êtes en train de poster en réponse à</p>
-        <p>{{ ticket.user }} a demandé une critique de</p>
-        <p>{{ ticket.title }}</p>
-        <p>{{ ticket.description }}</p>
-        <img src="{{ ticket.image.url }}">
-        <form method="post">
-            <h3>Critique</h3>
-            {{ review_form.as_p }}
-            {% csrf_token %}
-        <button type="submit" >Publier</button>
+
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div class="col-10">
+            <h2 class="text-center text-primary">Modifier votre critique</h2>
+        </div>
     </div>
+    <div class="row d-flex justify-content-center mt-3">
+        <div class="col-6">
+            <h3 class="fw-medium fs-4 text-primary">Vous êtes en train de poster en réponse à :</h3>
+            <div class="card my-4">
+                <div class="card-header">
+                    {% if ticket.user == request.user %}
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-6">
+                                <p class="text-start">Vous avez demandé une critique</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-end">{{ ticket.time_created }}</p>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-6">
+                                <p class="text-start">{{ ticket.user }} a demandé une critique</p>
+                            </div>
+                            <div class="col-6">
+                                <p class="text-end">{{ ticket.time_created }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ ticket.title }}</h5>
+                    <p class="card-text">{{ ticket.description }}</p>
+                    <div class="text-center">
+                        {% if ticket.image %}
+                            <img src="{{ ticket.image.url }}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <form method="post">
+                <h3 class="fw-medium fs-4 mb-3 text-primary">Critique</h3>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="form-group w-100">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="{{ review_form.headline.id_for_label }}" class="form-label">Titre</label>
+                                </div>
+                                <div class="col-9">
+                                    {{ review_form.headline }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="form-group w-100">
+                            <div class="row mt-3">
+                                <div class="col-3">
+                                    <label for="{{ review_form.rating.id_for_label }}" class="form-label">Note</label>
+                                </div>
+                                <div class="col-9">
+                                    <div id="id_rating" >
+                                        {% for radio in review_form.rating %}
+                                            <div class="form-check form-check-inline">
+                                                {{ radio.tag }}
+                                                <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }} </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="form-group w-100">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="{{ review_form.body.id_for_label }}" class="form-label">Commentaire</label>
+                                </div>
+                                <div class="col-9">
+                                    {{ review_form.body }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <div class="col-12 d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock content %}

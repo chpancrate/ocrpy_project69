@@ -10,25 +10,72 @@ from . import models
 
 @login_required
 def home(request):
+
+    # get user feed tickets and reviews
+    user_tickets = models.Ticket.objects.filter(
+        Q(user__in=request.user.following.values("followed_user")) |
+        Q(user=request.user)
+    )
+    user_tickets = user_tickets.annotate(
+        content_type=Value('TICKET', CharField()))
+    user_reviews = models.Review.objects.filter(
+        Q(user__in=request.user.following.values("followed_user")) |
+        Q(user=request.user) |
+        Q(ticket__in=models.Ticket.objects.filter(user=request.user))
+    )
+    user_reviews = user_reviews.annotate(
+        content_type=Value('REVIEW', CharField()))
+
+    user_feed = sorted(
+        chain(user_tickets, user_reviews),
+        key=lambda instance: instance.time_created,
+        reverse=True
+    )[:3]
+
+    # get general feed tickets and reviews
+    general_tickets = models.Ticket.objects.all()
+    general_tickets = general_tickets.annotate(
+        content_type=Value('TICKET', CharField()))
+    general_reviews = models.Review.objects.all()
+    general_reviews = general_reviews.annotate(
+        content_type=Value('REVIEW', CharField()))
+
+    general_feed = sorted(
+        chain(general_tickets, general_reviews),
+        key=lambda instance: instance.time_created,
+        reverse=True
+    )[:3]
+
+    context = {'user_feed': user_feed,
+               'general_feed': general_feed}
+    return render(request, 'reviews/home.html', context)
+
+
+def feed(request):
     tickets = models.Ticket.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
         Q(user=request.user)
     )
-    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    tickets = tickets.annotate(
+        content_type=Value('TICKET', CharField()))
+
     reviews = models.Review.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
         Q(user=request.user) |
         Q(ticket__in=models.Ticket.objects.filter(user=request.user))
     )
-    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+    reviews = reviews.annotate(
+        content_type=Value('REVIEW', CharField()))
 
     feed = sorted(
         chain(tickets, reviews),
         key=lambda instance: instance.time_created,
         reverse=True
     )
+
     context = {'feed': feed}
-    return render(request, 'reviews/home.html', context)
+    print(feed[0].review_set.all())
+    return render(request, 'reviews/feed.html', context)
 
 
 def posts(request):
@@ -177,6 +224,7 @@ def review_delete(request, review_id):
     return render(request,
                   'reviews/review_delete.html',
                   context)
+
 
 def follow_user(request):
     """ add a followed user"""
