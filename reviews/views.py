@@ -51,6 +51,7 @@ def home(request):
     return render(request, 'reviews/home.html', context)
 
 
+@login_required
 def feed(request):
     tickets = models.Ticket.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
@@ -78,6 +79,7 @@ def feed(request):
     return render(request, 'reviews/feed.html', context)
 
 
+@login_required
 def posts(request):
     tickets = models.Ticket.objects.filter(user=request.user)
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
@@ -93,6 +95,7 @@ def posts(request):
     return render(request, 'reviews/posts.html', context)
 
 
+@login_required
 def ticket_create(request):
     if request.method == 'POST':
         form = forms.TicketForm(request.POST, request.FILES)
@@ -111,6 +114,7 @@ def ticket_create(request):
     return render(request, 'reviews/ticket_create.html', context)
 
 
+@login_required
 def ticket_edit(request, ticket_id):
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
     form = forms.TicketForm(instance=ticket)
@@ -126,6 +130,7 @@ def ticket_edit(request, ticket_id):
     return render(request, 'reviews/ticket_edit.html', context)
 
 
+@login_required
 def ticket_delete(request, ticket_id):
     ticket = models.Ticket.objects.get(id=ticket_id)
 
@@ -139,6 +144,7 @@ def ticket_delete(request, ticket_id):
                   context)
 
 
+@login_required
 def review_without_ticket_create(request):
     """ create a ticket AND a review at the same time"""
     if request.method == 'POST':
@@ -167,6 +173,7 @@ def review_without_ticket_create(request):
                   context)
 
 
+@login_required
 def review_with_ticket_create(request, ticket_id):
     """ create a review from a ticket"""
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
@@ -192,6 +199,7 @@ def review_with_ticket_create(request, ticket_id):
                   context)
 
 
+@login_required
 def review_edit(request, review_id):
     """ edit a review"""
     review = get_object_or_404(models.Review, id=review_id)
@@ -213,6 +221,7 @@ def review_edit(request, review_id):
                   context)
 
 
+@login_required
 def review_delete(request, review_id):
     review = models.Review.objects.get(id=review_id)
 
@@ -226,6 +235,7 @@ def review_delete(request, review_id):
                   context)
 
 
+@login_required
 def follow_user(request):
     """ add a followed user"""
     followed_by = request.user.followed_by.all()
@@ -250,6 +260,7 @@ def follow_user(request):
                   context)
 
 
+@login_required
 def unfollow_user(request, follow_id):
     relationship = models.UserFollows.objects.get(id=follow_id)
 

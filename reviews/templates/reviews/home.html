@@ -11,7 +11,7 @@
     <div class="row">
         {% for post in general_feed %}
             <div class="col-12 col-lg-6 col-xl-4">
-                <div class="card style="heigth: 400px">
+                <div class="card" style="height: 500px;">
                     {% if post.content_type == 'TICKET' %}
                         <div class="card-header text-center">
                             Ticket - {{ post.user }}
