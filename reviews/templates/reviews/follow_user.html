@@ -29,15 +29,12 @@
                         <div class="bg-light h-100 w-100 d-flex align-items-center px-1">
                             {{ follow.followed_user.username }}
                         </div>
-                        <!--
-                        <p class="bg-light w-100 h-100">{{ follow.followed_user.username }} </p>
-                        -->
                     </div>
                     <div class="col-6 col-md-4 col-lg-3 my-1 text-end">
                         <!--
-                        <p class="w-100"><a href="{% url 'unfollow_user' follow.id %}" class="btn btn-primary w-100">Désabonner</a></p>
+                        <p class="w-100"><a href="{% url 'unfollow_user' %}" class="btn btn-primary w-100">Désabonner</a></p>
                         -->
-                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#unfollowModal">
+                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#unfollowModal" data-follow-id="{{ follow.id }}">
                             Se désabonner
                             </button>
                     </div>
@@ -60,6 +57,49 @@
         </div>
     </div>
 </div>
+<!-- unfollow button script -->
+<script>
+    $(document).ready(function() {
+        $('#unfollowModal').on('show.bs.modal', function(event) {
+            
+            console.log('UFS: start')
+            var pressedButton = $(event.relatedTarget); // retrieve the button that triggered the modal
+            var followId = pressedButton.data('followId'); // extract the follow-id attribute value
+            console.log('UFS follow id', followId)
+            const button = document.getElementById('unfollow-button');
+            const formData = JSON.stringify({
+                relation: followId
+            });
+            console.log('UFS formData', formData)
+
+            button.addEventListener('click', unfollowUser);
+
+            console.log('UFS: click ready')
+            function unfollowUser() {
+                // Make an HTTP request to delete the relationship
+                console.log('UFS formData', formData)
+
+                fetch('{% url 'unfollow_user' %}', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+		                    'Content-type': 'application/json; charset=UTF-8'
+	                        }
+                        })
+                .then(response => response.json())
+                .then(data => {
+                // reload the page
+                location.reload();
+                })
+                .catch(error => {
+                // Handle any errors that occurred during the request
+                console.error('Error:', error);
+                });
+            };
+        });
+    });
+
+</script>
 <!-- unfollowModal -->
 <div class="modal fade" id="unfollowModal" tabindex="-1" aria-labelledby="unfollow modal" aria-hidden="true">
     <div class="modal-dialog">
@@ -69,7 +109,7 @@
         </div>
         <div class="modal-footer d-flex justify-content-evenly">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Se désabonner</button>
+          <button type="button" id="unfollow-button" class="btn btn-primary">Se désabonner</button>
         </div>
       </div>
     </div>

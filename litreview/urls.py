@@ -71,7 +71,7 @@ urlpatterns = [
     path('follow/followership/',
          reviews.views.follow_user,
          name='follow_user'),
-    path('follow/<int:follow_id>/delete/',
+    path('follow/delete/',
          reviews.views.unfollow_user,
          name='unfollow_user'),
 ]

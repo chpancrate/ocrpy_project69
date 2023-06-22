@@ -1,8 +1,12 @@
+import json
+
 from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import CharField, Value, Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from . import forms
 from . import models
@@ -267,7 +271,19 @@ def follow_user(request):
 
 
 @login_required
-def unfollow_user(request, follow_id):
+@csrf_exempt
+def unfollow_user(request):
+
+    print("view: unfollow_user")
+    if request.method == 'POST':
+        body_json = json.loads(request.body)
+        print("RPOST:", body_json)
+        follow_id = body_json['relation']
+        relationship = models.UserFollows.objects.get(id=follow_id)
+        relationship.delete()
+        return JsonResponse({'success': 'yes'})
+
+    """
     relationship = models.UserFollows.objects.get(id=follow_id)
 
     if request.method == 'POST':
@@ -278,3 +294,4 @@ def unfollow_user(request, follow_id):
     return render(request,
                   'reviews/follow_delete.html',
                   context)
+"""
