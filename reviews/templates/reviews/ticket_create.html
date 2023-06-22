@@ -47,6 +47,7 @@
                 </div>
                 {% csrf_token %}
                 <div class="d-flex justify-content-evenly mt-4">
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
                     <button type="submit" class="btn btn-primary">Envoyer</button>
                 </div>
             </form>

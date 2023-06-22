@@ -75,7 +75,6 @@ def feed(request):
     )
 
     context = {'feed': feed}
-    print(feed[0].review_set.all())
     return render(request, 'reviews/feed.html', context)
 
 
@@ -104,9 +103,10 @@ def ticket_create(request):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            # go back to home page
-            return redirect('home')
 
+            next = request.POST.get('next', '/')
+            # go to previous page
+            return redirect(next)
     else:
         form = forms.TicketForm()
 
@@ -123,8 +123,10 @@ def ticket_edit(request, ticket_id):
         if form.is_valid():
             # form is valid save ticket in DB
             form.save()
-            # go back to home page
-            return redirect('home')
+
+            next = request.POST.get('next', '/')
+            # go to previous page
+            return redirect(next)
 
     context = {'form': form}
     return render(request, 'reviews/ticket_edit.html', context)
@@ -159,9 +161,10 @@ def review_without_ticket_create(request):
             review.user = request.user
             review.ticket = ticket
             review.save()
-            # go back to home page
-            return redirect('home')
 
+            next = request.POST.get('next', '/')
+            # go to previous page
+            return redirect(next)
     else:
         ticket_form = forms.TicketForm()
         review_form = forms.ReviewForm()
@@ -186,9 +189,10 @@ def review_with_ticket_create(request, ticket_id):
             review.user = request.user
             review.ticket = ticket
             review.save()
-            # go back to home page
-            return redirect('home')
 
+            next = request.POST.get('next', '/')
+            # go to previous page
+            return redirect(next)
     else:
         review_form = forms.ReviewForm()
 
@@ -211,8 +215,10 @@ def review_edit(request, review_id):
         if review_form.is_valid():
             # save review in DB
             review_form.save()
-            # go back to home page
-            return redirect('home')
+
+            next = request.POST.get('next', '/')
+            # go to previous page
+            return redirect(next)
 
     context = {'ticket': ticket,
                'review_form': review_form
