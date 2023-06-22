@@ -14,7 +14,11 @@ from . import models
 
 @login_required
 def home(request):
-
+    """ view for the homepage
+        get the 3 most recents items (review and ticket) from all sources
+        and the 3 most recents itmes from the user feed
+        Send it for display 
+    """
     # get user feed tickets and reviews
     user_tickets = models.Ticket.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
@@ -22,6 +26,7 @@ def home(request):
     )
     user_tickets = user_tickets.annotate(
         content_type=Value('TICKET', CharField()))
+   
     user_reviews = models.Review.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
         Q(user=request.user) |
@@ -30,6 +35,7 @@ def home(request):
     user_reviews = user_reviews.annotate(
         content_type=Value('REVIEW', CharField()))
 
+    # merge the reviews and tickets and select the 3 most recent
     user_feed = sorted(
         chain(user_tickets, user_reviews),
         key=lambda instance: instance.time_created,
@@ -40,10 +46,12 @@ def home(request):
     general_tickets = models.Ticket.objects.all()
     general_tickets = general_tickets.annotate(
         content_type=Value('TICKET', CharField()))
+
     general_reviews = models.Review.objects.all()
     general_reviews = general_reviews.annotate(
         content_type=Value('REVIEW', CharField()))
 
+    # merge the reviews and tickets and select the 3 most recent
     general_feed = sorted(
         chain(general_tickets, general_reviews),
         key=lambda instance: instance.time_created,
@@ -57,6 +65,11 @@ def home(request):
 
 @login_required
 def feed(request):
+    """ view for the feed page
+        get the items (review and ticket) from the user
+        and from the users it follows
+        sort them in decreasing time send them for display
+    """
     tickets = models.Ticket.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
         Q(user=request.user)
@@ -84,6 +97,10 @@ def feed(request):
 
 @login_required
 def posts(request):
+    """ view for the posts page
+        get the items (review and ticket) from the user
+        sort them in decreasing time send them for display
+    """
     tickets = models.Ticket.objects.filter(user=request.user)
     tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
     reviews = models.Review.objects.filter(user=request.user)
@@ -100,11 +117,13 @@ def posts(request):
 
 @login_required
 def ticket_create(request):
+    """ view for the ticket creation page """
     if request.method == 'POST':
         form = forms.TicketForm(request.POST, request.FILES)
         if form.is_valid():
             # form is valid save ticket in DB
             ticket = form.save(commit=False)
+            # add the user to the ticket
             ticket.user = request.user
             ticket.save()
 
@@ -120,7 +139,11 @@ def ticket_create(request):
 
 @login_required
 def ticket_edit(request, ticket_id):
+    """ view for the ticket edition page
+    retrieve the ticket and display it then save the changes
+    """
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
+
     form = forms.TicketForm(instance=ticket)
     if request.method == 'POST':
         form = forms.TicketForm(request.POST, request.FILES, instance=ticket)
@@ -138,6 +161,9 @@ def ticket_edit(request, ticket_id):
 
 @login_required
 def ticket_delete(request, ticket_id):
+    """ view for the ticket deletion page
+    retrieve the ticket and display it then delete it when confirmed
+    """
     ticket = models.Ticket.objects.get(id=ticket_id)
 
     if request.method == 'POST':
@@ -183,6 +209,8 @@ def review_without_ticket_create(request):
 @login_required
 def review_with_ticket_create(request, ticket_id):
     """ create a review from a ticket"""
+
+    # get the ticket data for dispaly
     ticket = get_object_or_404(models.Ticket, id=ticket_id)
 
     if request.method == 'POST':
@@ -273,6 +301,7 @@ def follow_user(request):
 @login_required
 @csrf_exempt
 def unfollow_user(request):
+    """ delete a follow relationship """
 
     print("view: unfollow_user")
     if request.method == 'POST':
@@ -282,16 +311,3 @@ def unfollow_user(request):
         relationship = models.UserFollows.objects.get(id=follow_id)
         relationship.delete()
         return JsonResponse({'success': 'yes'})
-
-    """
-    relationship = models.UserFollows.objects.get(id=follow_id)
-
-    if request.method == 'POST':
-        relationship.delete()
-        return redirect('follow_user')
-
-    context = {'relationship': relationship}
-    return render(request,
-                  'reviews/follow_delete.html',
-                  context)
-"""
