@@ -15,3 +15,8 @@
 .card.inticket {
     border: 1px;
 }
+
+.required.form-label:after {
+    content: "  *";
+    color: $black;
+}

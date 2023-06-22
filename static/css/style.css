@@ -11598,4 +11598,9 @@ textarea.form-control-lg {
   border: 1px;
 }
 
+.required.form-label:after {
+  content: "  *";
+  color: #000;
+}
+
 /*# sourceMappingURL=style.css.map */
