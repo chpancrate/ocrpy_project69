@@ -30,7 +30,10 @@
                             <p class="card-text">{{ post.description }}</p>
                             <div class="d-flex justify-content-evenly mt-4">
                                 <a href="{% url 'ticket_edit' post.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Modifier</a>
-                                <a href="{% url 'ticket_delete' post.id %}" class="btn btn-primary">Supprimer</a>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                    data-del-id="{{ post.id }}" data-del-url="{% url 'ticket_delete'%}" data-del-title="{{ post.title }}" data-del-type="le ticket">
+                                    Supprimer
+                                </button>
                                 {% if post.review_set.all|length == 0 %}
                                     <a href="{% url 'review_with_ticket_create' post.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Créer une critique</a>
                                 {% endif%}
@@ -77,7 +80,10 @@
                             </div>
                             <div class="d-flex justify-content-evenly mt-4">
                                 <a href="{% url 'review_edit' post.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Modifier</a>
-                                <a href="{% url 'review_delete' post.id %}" class="btn btn-primary">Supprimer</a>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                    data-del-id="{{ post.id }}" data-del-url="{% url 'review_delete'%}" data-del-title="{{ post.headline }}" data-del-type="la critique">
+                                    Supprimer
+                                </button>
                             </div>
                         </div>
                     {% endif %}
@@ -87,4 +93,72 @@
     </div>
 </div>
 
+<!-- delete button script -->
+<script>
+    $(document).ready(function() {
+        $('#deleteModal').on('show.bs.modal', function(event) {
+            
+            console.log('DS: start')
+
+            const pressedButton = $(event.relatedTarget); // retrieve the button that triggered the modal
+            // retrieve the data from the button
+            const deleteId = pressedButton.data('delId');
+            const deleteUrl = pressedButton.data('delUrl');
+            const itemTitle = pressedButton.data('delTitle');
+            const itemType = pressedButton.data('delType');
+            console.log('DS : ', deleteId, deleteUrl, itemTitle, itemType)
+            var modalTitle = "Voulez-vous supprimer " + itemType
+
+            $(this).find('.modal-title').text(modalTitle);
+            $(this).find('.modal-body').text(itemTitle);
+            const button = document.getElementById('unfollow-button');
+            const formData = JSON.stringify({
+                item: deleteId
+            });
+            console.log('DS formData', formData)
+
+            button.addEventListener('click', unfollowUser);
+
+            console.log('DS: click ready')
+            function unfollowUser() {
+                // Make an HTTP request to delete the relationship
+                console.log('DS formData', formData)
+
+                fetch(deleteUrl, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+		                    'Content-type': 'application/json; charset=UTF-8'
+	                        }
+                        })
+                .then(response => response.json())
+                .then(data => {
+                // reload the page
+                location.reload();
+                })
+                .catch(error => {
+                // Handle any errors that occurred during the request
+                console.error('Error:', error);
+                });
+            };
+        });
+    });
+</script>
+
+<!-- delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="unfollow modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h5 class="modal-title"></h5>
+            </div>
+            <div class="modal-body text-center">
+            </div>
+            <div class="modal-footer d-flex justify-content-evenly">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="unfollow-button" class="btn btn-primary">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

@@ -160,20 +160,17 @@ def ticket_edit(request, ticket_id):
 
 
 @login_required
-def ticket_delete(request, ticket_id):
+@csrf_exempt
+def ticket_delete(request):
     """ view for the ticket deletion page
     retrieve the ticket and display it then delete it when confirmed
     """
-    ticket = models.Ticket.objects.get(id=ticket_id)
-
     if request.method == 'POST':
+        body_json = json.loads(request.body)
+        ticket_id = body_json['item']
+        ticket = models.Ticket.objects.get(id=ticket_id)
         ticket.delete()
-        return redirect('home')
-
-    context = {'ticket': ticket}
-    return render(request,
-                  'reviews/ticket_delete.html',
-                  context)
+        return JsonResponse({'success': 'yes'})
 
 
 @login_required
@@ -260,17 +257,15 @@ def review_edit(request, review_id):
 
 
 @login_required
-def review_delete(request, review_id):
-    review = models.Review.objects.get(id=review_id)
+@csrf_exempt
+def review_delete(request):
 
     if request.method == 'POST':
+        body_json = json.loads(request.body)
+        review_id = body_json['item']
+        review = models.Review.objects.get(id=review_id)
         review.delete()
-        return redirect('home')
-
-    context = {'review': review}
-    return render(request,
-                  'reviews/review_delete.html',
-                  context)
+        return JsonResponse({'success': 'yes'})
 
 
 @login_required

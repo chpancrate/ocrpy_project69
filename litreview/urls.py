@@ -19,21 +19,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import (
-    LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView)
+    LogoutView, PasswordChangeView, PasswordChangeDoneView)
 
 import authentication.views
 import reviews.views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(
-        "",
-        LoginView.as_view(
-            template_name="authentication/login.html",
-            redirect_authenticated_user=True
-        ),
-        name="login",
-        ),
+    path("", authentication.views.login_page, name="login"),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('change-password/', PasswordChangeView.as_view(
         template_name='authentication/password_change_form.html'),
@@ -52,7 +45,7 @@ urlpatterns = [
          reviews.views.ticket_edit,
          name='ticket_edit',
          ),
-    path('ticket/<int:ticket_id>/delete/',
+    path('ticket/delete/',
          reviews.views.ticket_delete,
          name='ticket_delete',
          ),
@@ -65,7 +58,7 @@ urlpatterns = [
     path('reviews/<int:review_id>/edit/',
          reviews.views.review_edit,
          name='review_edit'),
-    path('reviews/<int:review_id>/delete/',
+    path('reviews/delete/',
          reviews.views.review_delete,
          name='review_delete'),
     path('follow/followership/',

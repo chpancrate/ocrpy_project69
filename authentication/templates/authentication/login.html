@@ -29,18 +29,7 @@
                     <p>{{ message }}</p>
                     <h2>Connectez-vous</h2>
                     <form method="post">
-                        <div class="form-group">
-                            <p><label for="{{ form.username.id_for_label}}" class="form-label">Nom d'utilisateur :</label></p>
-                            {{ form.username}} 
-                        </div>
-                        <div class="form-group mt-3">
-                            <p><label for="{{ form.password.id_for_label}}" class="form-label">Mot de passe :</label></p>
-                            <p class="col-10">
-                                <div class="w-100">
-                                    {{ form.password}}
-                                </div>        
-                            </p>
-                        </div>
+                        {{ form.as_p }}
                         {% csrf_token %}
                         <button type="submit" class="btn btn-primary">Se connecter</button>
                     </form>
