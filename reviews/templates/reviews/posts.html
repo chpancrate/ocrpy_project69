@@ -30,7 +30,7 @@
                             <p class="card-text">{{ post.description }}</p>
                             <div class="d-flex justify-content-evenly mt-4">
                                 <a href="{% url 'ticket_edit' post.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Modifier</a>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#deleteModal" 
                                     data-del-id="{{ post.id }}" data-del-url="{% url 'ticket_delete'%}" data-del-title="{{ post.title }}" data-del-type="le ticket">
                                     Supprimer
                                 </button>
@@ -80,7 +80,7 @@
                             </div>
                             <div class="d-flex justify-content-evenly mt-4">
                                 <a href="{% url 'review_edit' post.id %}?next={{ request.path|urlencode }}" class="btn btn-primary">Modifier</a>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#deleteModal" 
                                     data-del-id="{{ post.id }}" data-del-url="{% url 'review_delete'%}" data-del-title="{{ post.headline }}" data-del-type="la critique">
                                     Supprimer
                                 </button>

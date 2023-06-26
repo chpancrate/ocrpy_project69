@@ -56,7 +56,7 @@ class FollowUserForm(forms.ModelForm):
         User = get_user_model()
         username = self.cleaned_data['followed_user']
         user = User.objects.filter(username=username)
-        if len(user) == 0 :
+        if len(user) == 0:
             raise forms.ValidationError("Utilisateur inconnu")
         else:
             return user[0]

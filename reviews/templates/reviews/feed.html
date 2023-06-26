@@ -4,10 +4,10 @@
         <h2 class="text-center mb-5 text-primary">Votre flux</h2>
         <div class="row d-flex justify-content-center my-4">
             <div class="col-12 text-center col-md-3 text-md-end mb-4">
-                <a href="{% url 'ticket_create' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Demander une critique</a>
+                <a href="{% url 'ticket_create' %}?next={{ request.path|urlencode }}" class="btn btn-info">Demander une critique</a>
             </div>
             <div class="col-12 text-center col-md-3 text-md-start">
-                <a href="{% url 'review_without_ticket_create' %}?next={{ request.path|urlencode }}" class="btn bg-primary text-white">Créer une critique</a>
+                <a href="{% url 'review_without_ticket_create' %}?next={{ request.path|urlencode }}" class="btn btn-primary">Créer une critique</a>
             </div>
         </div>
     </div>
