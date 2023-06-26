@@ -47,4 +47,4 @@ The application will then be accessible at the url : http://127.0.0.1:8000/
 
 ## Users and passwords
 
-Some users are setup, they can be found in the file users.txt at the root of the project.
+Some users are setup, they can be found in the file users.txt in the authentication folder.
