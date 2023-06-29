@@ -19,6 +19,7 @@
                                     </div>
                                     <div class="col-9">
                                         {{ ticket_form.title }}
+                                        {{ ticket_form.title.errors }}
                                     </div>
                                 </div>
                             </div>
@@ -56,6 +57,7 @@
                                     </div>
                                     <div class="col-9">
                                         {{ review_form.headline }}
+                                        {{ review_form.headline.errors }}
                                     </div>
                                     
                                 </div>
@@ -78,6 +80,7 @@
                                                 </div>
                                             {% endfor %}
                                         </div>
+                                        {{ review_form.rating.errors }}
                                     </div>
                                 </div>
                             </div>

@@ -9,9 +9,6 @@
     </div>
     <div class="row d-flex justify-content-center mt-5">
         <div class="col-8">
-            {% if form.errors %}
-            {{ form.errors }}
-            {% endif %}
             <form method="post">
                 {{ form.as_p }}
                 {% csrf_token %}
