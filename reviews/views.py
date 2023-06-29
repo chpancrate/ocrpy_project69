@@ -3,6 +3,7 @@ import json
 from itertools import chain
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import CharField, Value, Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,13 +12,14 @@ from django.views.decorators.csrf import csrf_exempt
 from . import forms
 from . import models
 
+NUMBER_OF_ITEMS_BY_PAGE = 5
 
 @login_required
 def home(request):
     """ view for the homepage
         get the 3 most recents items (review and ticket) from all sources
         and the 3 most recents itmes from the user feed
-        Send it for display 
+        Send it for display
     """
     # get user feed tickets and reviews
     user_tickets = models.Ticket.objects.filter(
@@ -26,7 +28,7 @@ def home(request):
     )
     user_tickets = user_tickets.annotate(
         content_type=Value('TICKET', CharField()))
-   
+
     user_reviews = models.Review.objects.filter(
         Q(user__in=request.user.following.values("followed_user")) |
         Q(user=request.user) |
@@ -91,7 +93,12 @@ def feed(request):
         reverse=True
     )
 
-    context = {'feed': feed}
+    # Pagination handling
+    paginator = Paginator(feed, NUMBER_OF_ITEMS_BY_PAGE)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj': page_obj}
     return render(request, 'reviews/feed.html', context)
 
 
@@ -106,12 +113,17 @@ def posts(request):
     reviews = models.Review.objects.filter(user=request.user)
     reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
 
-    feed = sorted(
+    posts = sorted(
         chain(tickets, reviews),
         key=lambda instance: instance.time_created,
         reverse=True
     )
-    context = {'feed': feed}
+    # Pagination handling
+    paginator = Paginator(posts, NUMBER_OF_ITEMS_BY_PAGE)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj': page_obj}
     return render(request, 'reviews/posts.html', context)
 
 
