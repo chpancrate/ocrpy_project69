@@ -48,3 +48,21 @@ The application will then be accessible at the url : http://127.0.0.1:8000/
 ## Users and passwords
 
 Some users are setup, they can be found in the file users.txt in the authentication folder.
+
+## Screenshots
+
+### login page
+
+![Login page](media/readme/login.png)
+
+### homepage
+
+![Home page](media/readme/index.png)
+
+### posts
+
+![Posts page](media/readme/posts.png)
+
+### follow
+
+![Follow page](media/readme/follow.png)

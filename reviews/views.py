@@ -14,6 +14,7 @@ from . import models
 
 NUMBER_OF_ITEMS_BY_PAGE = 5
 
+
 @login_required
 def home(request):
     """ view for the homepage
